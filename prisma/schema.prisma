@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id       Int    @id @default(autoincrement())
+  roleName String
+  roleText String
+  User     User[]
+}
+
+model User {
+  id                 Int        @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  email              String     @unique
+  mobile             String
+  password           String
+  role               Role       @relation(fields: [roleId], references: [id])
+  roleId             Int
+  resetPasswordToken String?
+  isEmailVerified    Int        @default(0)
+  isMobileVerified   Int        @default(0)
+  isActive           Int        @default(1)
+  isDeleted          Int        @default(0)
+  Property           Property[]
+}
+
+model Admin {
+  id        Int    @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String @unique
+  password  String
+  mobile    String
+  isActive  Int    @default(1)
+  isDeleted Int    @default(0)
+}
+
+model Master {
+  id      Int    @id @default(autoincrement())
+  name    String
+  options Json
+}
+
+model Property {
+  id                  Int    @id @default(autoincrement())
+  user                User   @relation(fields: [userId], references: [id])
+  userId              Int
+  location            String
+  landmark            String
+  pincode             String
+  projectName         String
+  isVerified          Int    @default(0)
+  propertyFor         String
+  propertyType        String
+  bedroomCount        String
+  balconyCount        String
+  floorNumber         String
+  totalFloors         String
+  furnishedStatus     String
+  carpetArea          String
+  superBuiltUpArea    String
+  areaUnit            String
+  transactionType     String
+  possessionStatus    String
+  possessionYear      String
+  ageOfConstruction   String
+  expectedPrice       String
+  bookingAmount       String
+  maintainanceCharges String
+}
